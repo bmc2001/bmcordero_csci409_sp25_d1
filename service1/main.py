@@ -6,9 +6,12 @@ Description: Program to run routes from app.py in order to run this as a microse
 """
 
 from fastapi import FastAPI
+from dotenv import load_dotenv
 import requests
+import os
 
-API_KEY = "76b1c90015874a138fa71dbe8e86decf"  # Fill in with your API Key
+load_dotenv()
+API_KEY = os.getenv("API_KEY")  # Fill in with your API Key
 ENDPOINT_URL = "https://api-v3.mbta.com/"  # DO NOT CHANGE THIS
 
 app = FastAPI()  # Initialize the end point for FastAPI app

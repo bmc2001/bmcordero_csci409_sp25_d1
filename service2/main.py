@@ -6,9 +6,12 @@ Description: Program to run routes from app.py in order to run this as a microse
 """
 
 from fastapi import FastAPI, Depends
+from dotenv import load_dotenv
 import httpx
+import os
 
-API_KEY = "76b1c90015874a138fa71dbe8e86decf"  # Fill in with your API Key
+load_dotenv()
+API_KEY = os.getenv("API_KEY")  # Fill in with your API Key  # Fill in with your API Key
 ENDPOINT_URL = "https://api-v3.mbta.com/"  # DO NOT CHANGE THIS
 
 app = FastAPI()  # Initialize the end point for FastAPI app
@@ -93,6 +96,8 @@ async def read_vehicles(route: str = None, revenue: bool = None, vehicles=Depend
 async def read_vehicle(vehicle_id: str, vehicle=Depends(get_vehicle_by_id)):
     return vehicle
 
+
 if __name__ == "__main__":
     import uvicorn
+
     uvicorn.run(app, host="0.0.0.0", port=8002)
