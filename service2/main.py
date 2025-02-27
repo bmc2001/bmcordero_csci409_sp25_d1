@@ -7,6 +7,7 @@ Description: Program to run routes from app.py in order to run this as a microse
 
 from fastapi import FastAPI, Depends
 from dotenv import load_dotenv
+from auth import get_current_user
 import httpx
 import os
 
@@ -48,12 +49,12 @@ async def get_alert_by_id(alert_id: str):
 
 # route that will fetch all alerts
 
-@app.get("/alerts")
+@app.get("/alerts", dependencies=[Depends(get_current_user)])
 async def read_alerts(route: str = None, stop: str = None, alerts=Depends(get_all_alerts)):
     return alerts
 
 
-@app.get("/alerts/{alert_id}")
+@app.get("/alerts/{alert_id}", dependencies=[Depends(get_current_user)])
 async def read_alert(alert_id: str, alert=Depends(get_alert_by_id)):
     return alert
 
@@ -86,13 +87,13 @@ async def get_vehicle_by_id(vehicle_id: str):
 # Route that will fetch all vehicles with filters
 
 
-@app.get("/vehicles")
+@app.get("/vehicles", dependencies=[Depends(get_current_user)])
 async def read_vehicles(route: str = None, revenue: bool = None, vehicles=Depends(get_all_vehicles)):
     return vehicles
 
 
 # Route that will fetch a specific vehicle with ID
-@app.get("/vehicles/{vehicle_id}")
+@app.get("/vehicles/{vehicle_id}", dependencies=[Depends(get_current_user)])
 async def read_vehicle(vehicle_id: str, vehicle=Depends(get_vehicle_by_id)):
     return vehicle
 

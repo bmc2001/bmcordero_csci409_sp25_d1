@@ -5,8 +5,9 @@ Course: CSCI 409 D1
 Description: Program to run routes from app.py in order to run this as a microservice
 """
 
-from fastapi import FastAPI
+from fastapi import FastAPI, Depends
 from dotenv import load_dotenv
+from auth import get_current_user
 import requests
 import os
 
@@ -23,7 +24,7 @@ def read_root():
 
 
 # Get a list of all routes
-@app.get("/routes")
+@app.get("/routes", dependencies=[Depends(get_current_user)])
 def get_routes():
     routes_list = list()
     response = requests.get(ENDPOINT_URL + f"/routes?&api_key={API_KEY}")  # Send a request to the endpoint
@@ -45,7 +46,7 @@ def get_routes():
 
 
 # Get information on a specific route
-@app.get("/routes/{route_id}")
+@app.get("/routes/{route_id}", dependencies=[Depends(get_current_user)])
 def get_route(route_id: str):
     response = requests.get(ENDPOINT_URL + f"/routes/{route_id}?api_key={API_KEY}")  # Send a request to the endpoint
     # Convert the response to json and extract the data key
@@ -65,7 +66,7 @@ def get_route(route_id: str):
 
 
 # gives all lines with data and other specified attributes
-@app.get("/lines")
+@app.get("/lines", dependencies=[Depends(get_current_user)])
 def get_lines():
     lines_list = list()
     response = requests.get(ENDPOINT_URL + f"/routes?api_key={API_KEY}")
@@ -82,7 +83,7 @@ def get_lines():
 
 
 # gives details for a specified line
-@app.get("/lines/{line_id}")
+@app.get("/lines/{line_id}", dependencies=[Depends(get_current_user)])
 def get_line(line_id: str):
     response = requests.get(ENDPOINT_URL + f"/routes/{line_id}?api_key={API_KEY}")
     route_data = response.json().get("data")
